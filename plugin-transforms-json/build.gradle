@@ -1,0 +1,17 @@
+project.description = 'Kestra Plugin Transformation for Json.'
+
+jar {
+    manifest {
+        attributes(
+                "X-Kestra-Name": project.name,
+                "X-Kestra-Title": "Json",
+                "X-Kestra-Group": project.group + ".json",
+                "X-Kestra-Description": project.description,
+                "X-Kestra-Version": project.version
+        )
+    }
+}
+
+dependencies {
+    implementation 'com.ibm.jsonata4java:JSONata4Java:2.5.0'
+}

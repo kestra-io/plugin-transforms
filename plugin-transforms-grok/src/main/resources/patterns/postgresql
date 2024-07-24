@@ -1,0 +1,9 @@
+# This file is a copy from project : Logstash plugins
+# https://github.com/logstash-plugins/logstash-patterns-core/blob/v4.3.4/patterns/ecs-v1/postgresql
+#
+# SPDX-License-Identifier: Apache-2.0
+# Licensed under the Apache Software License version 2.0, available at https://github.com/logstash-plugins/logstash-patterns-core/blob/v4.3.4/LICENSE
+#
+
+# Default postgresql pg_log format pattern
+POSTGRESQL %{DATESTAMP:timestamp} %{TZ:[event][timezone]} %{DATA:[user][name]} %{GREEDYDATA:[postgresql][log][connection_id]} %{POSINT:[process][pid]:int}

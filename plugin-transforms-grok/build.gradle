@@ -1,0 +1,17 @@
+project.description = 'Kestra Plugin Transformation for Grok.'
+
+jar {
+    manifest {
+        attributes(
+                "X-Kestra-Name": project.name,
+                "X-Kestra-Title": "Json",
+                "X-Kestra-Group": project.group + ".grok",
+                "X-Kestra-Description": project.description,
+                "X-Kestra-Version": project.version
+        )
+    }
+}
+
+dependencies {
+    implementation 'org.jruby.joni:joni:2.2.1'
+}

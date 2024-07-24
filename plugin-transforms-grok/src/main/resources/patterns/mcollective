@@ -1,0 +1,11 @@
+# This file is a copy from project : Logstash plugins
+# https://github.com/logstash-plugins/logstash-patterns-core/blob/v4.3.4/patterns/ecs-v1/mcollective
+#
+# SPDX-License-Identifier: Apache-2.0
+# Licensed under the Apache Software License version 2.0, available at https://github.com/logstash-plugins/logstash-patterns-core/blob/v4.3.4/LICENSE
+#
+
+# Remember, these can be multi-line events.
+MCOLLECTIVE ., \[%{TIMESTAMP_ISO8601:timestamp} #%{POSINT:[process][pid]:int}\]%{SPACE}%{LOGLEVEL:[log][level]}
+
+MCOLLECTIVEAUDIT %{TIMESTAMP_ISO8601:timestamp}:

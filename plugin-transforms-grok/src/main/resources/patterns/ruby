@@ -1,0 +1,9 @@
+# This file is a copy from project : Logstash plugins
+# https://github.com/logstash-plugins/logstash-patterns-core/blob/v4.3.4/patterns/ecs-v1/ruby
+#
+# SPDX-License-Identifier: Apache-2.0
+# Licensed under the Apache Software License version 2.0, available at https://github.com/logstash-plugins/logstash-patterns-core/blob/v4.3.4/LICENSE
+#
+
+RUBY_LOGLEVEL (?:DEBUG|FATAL|ERROR|WARN|INFO)
+RUBY_LOGGER [DFEWI], \[%{TIMESTAMP_ISO8601:timestamp} #%{POSINT:[process][pid]:int}\] *%{RUBY_LOGLEVEL:[log][level]} -- +%{DATA:[process][name]}: %{GREEDYDATA:message}
