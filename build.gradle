@@ -196,7 +196,7 @@ subprojects { Project subproject ->
 
     github {
         user 'kestra-io'
-        repository 'plugin-transforms'
+        repository 'plugin-transform'
         license 'Apache'
     }
 
@@ -239,7 +239,7 @@ release {
     tagTemplate = 'v${version}'
     buildTasks = ['classes']
     git {
-        requireBranch.set('master')
+        requireBranch.set('main')
     }
 }
 

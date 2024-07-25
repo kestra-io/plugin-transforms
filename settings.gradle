@@ -1,4 +1,4 @@
-rootProject.name = 'plugin-transforms'
+rootProject.name = 'plugin-transform'
 
-include 'plugin-transforms-json'
-include 'plugin-transforms-grok'
+include 'plugin-transform-json'
+include 'plugin-transform-grok'
