@@ -76,8 +76,7 @@ import lombok.experimental.SuperBuilder;
 )
 public class TransformValue extends Transform implements RunnableTask<Output> {
 
-    private static final ObjectMapper ION_OBJECT_MAPPER = JacksonMapper.ofIon();
-    public static final ObjectMapper DEFAULT_OBJECT_MAPPER = new ObjectMapper();
+    public static final ObjectMapper JSON_OBJECT_MAPPER = JacksonMapper.ofJson();
 
     @Schema(
         title = "The value to be transformed.",
@@ -106,7 +105,7 @@ public class TransformValue extends Transform implements RunnableTask<Output> {
 
     private static JsonNode parseJson(String from) {
         try {
-            return DEFAULT_OBJECT_MAPPER.readTree(from);
+            return JSON_OBJECT_MAPPER.readTree(from);
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("Failed to parse the JSON object passed through the `from` property.", e);
         }

@@ -21,6 +21,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.Optional;
 
 @SuperBuilder
 @ToString
@@ -36,23 +37,17 @@ public abstract class Transform extends Task implements JSONataInterface, Runnab
     @Builder.Default
     private Integer maxDepth = 1000;
 
-    @Builder.Default
-    private Duration timeout = Duration.ofSeconds(10);
-
-    @Getter(AccessLevel.PRIVATE)
-    private RunContext runContext;
-
     @Getter(AccessLevel.PRIVATE)
     private Expressions expressions;
 
     public void init(RunContext runContext) throws Exception {
-        this.runContext = runContext;
         this.expressions = parseExpression(runContext);
     }
 
     protected JsonNode evaluateExpression(JsonNode jsonNode) {
         try {
-            return this.expressions.evaluate(jsonNode, getTimeout().toMillis(), getMaxDepth());
+            long timeoutInMilli = Optional.ofNullable(getTimeout()).map(Duration::toMillis).orElse(Long.MAX_VALUE);
+            return this.expressions.evaluate(jsonNode, timeoutInMilli, getMaxDepth());
         } catch (EvaluateException e) {
             throw new RuntimeException("Failed to evaluate expression", e);
         }

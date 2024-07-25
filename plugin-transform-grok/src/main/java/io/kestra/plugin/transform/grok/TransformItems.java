@@ -20,15 +20,12 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import reactor.core.publisher.Flux;
 
-import java.io.BufferedWriter;
 import java.io.InputStream;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
-
-import static io.kestra.core.utils.Rethrow.throwFunction;
 
 @SuperBuilder
 @ToString
@@ -102,19 +99,15 @@ public class TransformItems extends Transform implements GrokInterface, Runnable
             Flux<String> flux = FileSerde.readAll(is, new TypeReference<String>() {
             });
             final Path ouputFilePath = runContext.workingDir().createTempFile(".ion");
-            try (final BufferedWriter writer = Files.newBufferedWriter(ouputFilePath)) {
-                Long processedItemsTotal = flux.map(throwFunction(data -> {
-                        Map<String, Object> captured = matches(data.getBytes(StandardCharsets.UTF_8));
-                        writer.write(ION_OBJECT_MAPPER.writeValueAsString(captured));
-                        writer.newLine();
-                        return 1L;
-                    }))
-                    .reduce(Long::sum)
-                    .block();
+            try {
+                // transform
+                Flux<Map<String, Object>> values = flux.map(data -> matches(data.getBytes(StandardCharsets.UTF_8)));
 
-                writer.flush();
+                Long processedItemsTotal = FileSerde.writeAll(Files.newOutputStream(ouputFilePath), values).block();
 
                 URI uri = runContext.storage().putFile(ouputFilePath.toFile());
+
+                // output
                 return Output
                     .builder()
                     .uri(uri)

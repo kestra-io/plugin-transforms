@@ -9,6 +9,7 @@ import io.kestra.core.serializers.FileSerde;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.io.InputStream;
@@ -30,7 +31,9 @@ class TransformItemsTest {
         RunContext runContext = runContextFactory.of();
         final Path ouputFilePath = runContext.workingDir().createTempFile(".ion");
         try (final OutputStream os = Files.newOutputStream(ouputFilePath)) {
-            FileSerde.writeAll(os, Mono.just(new ObjectMapper().readValue(Features.DATASET_ACCOUNT_ORDER_JSON, Map.class)).flux()).block();
+            FileSerde.writeAll(os, Flux.just(
+                new ObjectMapper().readValue(Features.DATASET_ACCOUNT_ORDER_JSON, Map.class),
+                new ObjectMapper().readValue(Features.DATASET_ACCOUNT_ORDER_JSON, Map.class))).block();
             os.flush();
         }
         URI uri = runContext.storage().putFile(ouputFilePath.toFile());
@@ -45,7 +48,7 @@ class TransformItemsTest {
 
         // Then
         Assertions.assertNotNull(output);
-        Assertions.assertEquals(1, output.getProcessedItemsTotal());
+        Assertions.assertEquals(2, output.getProcessedItemsTotal());
 
         InputStream is = runContext.storage().getFile(output.getUri());
         String transformationResult = FileSerde.readAll(is, new TypeReference<String>() {

@@ -45,23 +45,19 @@ public abstract class Transform extends Task {
     private boolean breakOnFirstMatch = true;
 
     @Getter(AccessLevel.PRIVATE)
-    private RunContext runContext;
-
-    @Getter(AccessLevel.PRIVATE)
     private GrokPatternCompiler compiler;
 
     @Getter(AccessLevel.PRIVATE)
     private List<GrokMatcher> grokMatchers;
 
     public void init(final RunContext runContext) {
-        this.runContext = runContext;
 
         // create compiler
         this.compiler = new GrokPatternCompiler(
             new GrokPatternResolver(
                 runContext.logger(),
                 patternDefinitions(),
-                patternsDir()
+                patternsDir(runContext)
             ),
             isNamedCapturesOnly()
         );
@@ -92,7 +88,7 @@ public abstract class Transform extends Task {
         return Optional.ofNullable(patternDefinitions).orElse(Collections.emptyMap());
     }
 
-    private List<File> patternsDir() {
+    private List<File> patternsDir(RunContext runContext) {
         if (this.patternsDir == null || this.patternsDir.isEmpty()) return Collections.emptyList();
 
         return this.patternsDir

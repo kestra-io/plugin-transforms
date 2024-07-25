@@ -21,13 +21,10 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import reactor.core.publisher.Flux;
 
-import java.io.BufferedWriter;
 import java.io.InputStream;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
-import static io.kestra.core.utils.Rethrow.throwFunction;
 
 @SuperBuilder
 @ToString
@@ -86,19 +83,13 @@ public class TransformItems extends Transform implements RunnableTask<Output> {
             Flux<JsonNode> flux = FileSerde.readAll(is, new TypeReference<JsonNode>() {
             });
             final Path ouputFilePath = runContext.workingDir().createTempFile(".ion");
-            try (final BufferedWriter writer = Files.newBufferedWriter(ouputFilePath)) {
+            try {
 
                 // transform
-                Long processedItemsTotal = flux.map(throwFunction(jsonNode -> {
-                        jsonNode = evaluateExpression(jsonNode);
-                        writer.write(ION_OBJECT_MAPPER.writeValueAsString(jsonNode));
-                        writer.newLine();
-                        return 1L;
-                    }))
-                    .reduce(Long::sum)
-                    .block();
+                Flux<JsonNode> values = flux.map(this::evaluateExpression);
 
-                writer.flush();
+                Long processedItemsTotal = FileSerde.writeAll(Files.newOutputStream(ouputFilePath), values).block();
+
                 URI uri = runContext.storage().putFile(ouputFilePath.toFile());
 
                 // output
