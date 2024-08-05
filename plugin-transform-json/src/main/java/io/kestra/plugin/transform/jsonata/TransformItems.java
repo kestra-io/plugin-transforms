@@ -39,7 +39,7 @@ import java.nio.file.Path;
     examples = {
         @Example(
             title = "Transform JSON payload using JSONata expression.",
-            full = true,
+            full = false,
             code = """
                 id: jsonata
                 namespace: example

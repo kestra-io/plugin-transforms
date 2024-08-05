@@ -31,7 +31,7 @@ import java.util.Map;
         The `TransformValue` task is similar to the famous Logstash Grok filter from the ELK stack.
         It is particularly useful for transforming unstructured data such as logs into a structured, indexable, and queryable data structure.
         
-        The `TransformValue` ships with all the default patterns as defined You can find them here: https://github.com/kestra-io/plugin-transform/tree/main/plugin-transforms-grok/src/main/resources/patterns.
+        The `TransformValue` ships with all the default patterns as defined You can find them here: https://github.com/kestra-io/plugin-transform/tree/main/plugin-transform-grok/src/main/resources/patterns.
         """
 )
 @Plugin(
