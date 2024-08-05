@@ -64,7 +64,7 @@ import lombok.experimental.SuperBuilder;
                           }
                         ]
                       }
-                    expr: |
+                    expression: |
                        {
                         "order_id": order_id,
                         "customer_name": customer_name,

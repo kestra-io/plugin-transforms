@@ -9,7 +9,7 @@ public interface JSONataInterface {
     @PluginProperty(dynamic = true)
     @Schema(title = "The JSONata expression to apply on the JSON object.")
     @NotNull
-    String getExpr();
+    String getExpression();
 
     @PluginProperty(dynamic = true)
     @Schema(title = "The maximum number of recursive calls allowed for the JSONata transformation.")

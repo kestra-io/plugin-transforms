@@ -32,7 +32,7 @@ public abstract class Transform extends Task implements JSONataInterface, Runnab
 
     private static final ObjectMapper ION_OBJECT_MAPPER = JacksonMapper.ofIon();
 
-    private String expr;
+    private String expression;
 
     @Builder.Default
     private Integer maxDepth = 1000;
@@ -55,7 +55,7 @@ public abstract class Transform extends Task implements JSONataInterface, Runnab
 
     private Expressions parseExpression(RunContext runContext) throws IllegalVariableEvaluationException {
         try {
-            return Expressions.parse(runContext.render(this.expr));
+            return Expressions.parse(runContext.render(this.expression));
         } catch (ParseException | IOException e) {
             throw new IllegalArgumentException("Invalid JSONata expression. Error: " + e.getMessage(), e);
         }

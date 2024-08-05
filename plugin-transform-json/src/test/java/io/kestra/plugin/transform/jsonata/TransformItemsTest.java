@@ -40,7 +40,7 @@ class TransformItemsTest {
 
         TransformItems task = TransformItems.builder()
             .from(uri.toString())
-            .expr(Features.DATASET_ACCOUNT_ORDER_EXPR)
+            .expression(Features.DATASET_ACCOUNT_ORDER_EXPR)
             .build();
 
         // When

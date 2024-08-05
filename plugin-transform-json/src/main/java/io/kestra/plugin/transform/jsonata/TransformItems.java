@@ -47,7 +47,7 @@ import java.nio.file.Path;
                 - id: transformJson
                   type: io.kestra.plugin.transform.jsonata.TransformItems
                   from: {{ previousTask.outputs.uri }}
-                  expr: |
+                  expression: |
                      {
                         "order_id": order_id,
                         "customer_name": customer_name,

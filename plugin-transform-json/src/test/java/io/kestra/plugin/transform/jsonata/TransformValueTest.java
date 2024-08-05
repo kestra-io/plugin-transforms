@@ -19,7 +19,7 @@ class TransformValueTest {
         RunContext runContext = runContextFactory.of();
         TransformValue task = TransformValue.builder()
             .from(Features.DATASET_ACCOUNT_ORDER_JSON)
-            .expr(Features.DATASET_ACCOUNT_ORDER_EXPR)
+            .expression(Features.DATASET_ACCOUNT_ORDER_EXPR)
             .build();
 
         // When
@@ -62,7 +62,7 @@ class TransformValueTest {
                   ]
                 }
                 """)
-            .expr("""
+            .expression("""
                      {
                         "order_id": order_id,
                         "customer_name": customer_name,
