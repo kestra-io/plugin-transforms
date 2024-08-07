@@ -1,8 +1,14 @@
 package io.kestra.plugin.transform.jsonata;
 
+import java.io.InputStream;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.kestra.core.models.annotations.Example;
 import io.kestra.core.models.annotations.Plugin;
 import io.kestra.core.models.annotations.PluginProperty;
@@ -21,11 +27,6 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import reactor.core.publisher.Flux;
 
-import java.io.InputStream;
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
 @SuperBuilder
 @ToString
 @EqualsAndHashCode
@@ -39,20 +40,38 @@ import java.nio.file.Path;
     examples = {
         @Example(
             title = "Transform JSON payload using JSONata expression.",
-            full = false,
+            full = true,
             code = """
-                id: jsonata
-                namespace: example
+                id: jsonata-example
+                namespace: company.team
                 tasks:
-                - id: transformJson
-                  type: io.kestra.plugin.transform.jsonata.TransformItems
-                  from: {{ previousTask.outputs.uri }}
-                  expression: |
-                     {
-                        "order_id": order_id,
-                        "customer_name": customer_name,
-                        "total_price": $sum(items.(quantity * price_per_unit))
-                     }           
+                  - id: http_download
+                    type: io.kestra.plugin.core.http.Download
+                    uri: https://dummyjson.com/products
+                  - id: get_product_and_brand_name
+                    description: "String Transformation"
+                    type: io.kestra.plugin.transform.jsonata.TransformItems
+                    from: "{{ outputs.http_download.uri }}"
+                    expression: products.(title & ' by ' & brand)
+                  - id: get_total_price
+                    description: "Number Transformation"
+                    type: io.kestra.plugin.transform.jsonata.TransformItems
+                    from: "{{ outputs.http_download.uri }}"
+                    expression: $sum(products.price)
+                  - id: get_discounted_price
+                    type: io.kestra.plugin.transform.jsonata.TransformItems
+                    from: "{{ outputs.http_download.uri }}"
+                    expression: $sum(products.(price-(price*discountPercentage/100)))
+                  - id: sum_up
+                    description: "Writing out results in the form of JSON"
+                    type: io.kestra.plugin.transform.jsonata.TransformItems
+                    from: "{{ outputs.http_download.uri }}"
+                    expression: | 
+                      {
+                        "total_products": $count(products),
+                        "total_price": $sum(products.price),
+                        "total_discounted_price": $sum(products.(price-(price*discountPercentage/100)))
+                      }
                 """
         )
     }
